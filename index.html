@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WAZCLAN | Ultra-Premium Cinema & Media Production</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        ios: {
+                            blue: '#007AFF',
+                            purple: '#FB923C',
+                            pink: '#F97316',
+                            indigo: '#3B82F6',
+                            amber: '#FF9500',
+                            emerald: '#60A5FA'
+                        }
+                    },
+                    borderRadius: {
+                        'ios-sm': '16px',
+                        'ios': '24px',
+                        'ios-lg': '32px',
+                        'ios-xl': '40px'
+                    },
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(150, 150, 150, 0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(150, 150, 150, 0.5);
+        }
+
+        /* Ambient Glow & Liquid Orbs */
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(110px);
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        }
+
+        .dark .ambient-orb-1 {
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.7) 0%, rgba(175, 82, 222, 0.4) 100%);
+        }
+        .dark .ambient-orb-2 {
+            background: radial-gradient(circle, rgba(255, 45, 85, 0.6) 0%, rgba(255, 149, 0, 0.35) 100%);
+        }
+        .dark .ambient-orb-3 {
+            background: radial-gradient(circle, rgba(88, 86, 214, 0.5) 0%, rgba(52, 199, 89, 0.3) 100%);
+        }
+
+        /* Mouse Tracking Cursor Light Orb */
+        #cursorOrb {
+            position: fixed;
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(80px);
+            opacity: 0.25;
+            background: radial-gradient(circle, rgba(0, 122, 255, 0.8), rgba(255, 45, 85, 0.3), transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+        }
+
+        /* Liquid Glassmorphism Styling */
+        .glass-panel {
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            transition: background-color 0.4s ease, border-color 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .dark .glass-panel {
+            background: rgba(3, 3, 7, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.85), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+        }
+
+        html.light .glass-panel {
+            background: rgba(38, 43, 66, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            box-shadow: 0 16px 40px -10px rgba(5, 8, 24, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.16);
+        }
+
+        /* Liquid Card with Specular Refraction */
+        .tilt-card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            will-change: transform;
+            transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+        }
+
+        .glass-card {
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 28px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .dark .glass-card {
+            background: rgba(255, 255, 255, 0.022);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        html.light .glass-card {
+            background: rgba(255, 255, 255, 0.055);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 10px 30px rgba(5, 8, 24, 0.35);
+        }
+
+        /* Liquid Specular Reflection Overlay */
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.18), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .glass-card:hover::before {
+            opacity: 1;
+        }
+
+        /* iOS Bubbly Physics */
+        .bubbly-button {
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background-color 0.2s ease;
+        }
+        .bubbly-button:hover {
+            transform: scale(1.06) translateY(-2px);
+        }
+        .bubbly-button:active {
+            transform: scale(0.94) translateY(1px);
+        }
+
+        /* Modal Overlay Animations */
+        .modal-overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            transform: scale(0.92) translateY(20px);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Shimmer Animation */
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        .animate-shimmer {
+            animation: shimmer 2.5s infinite;
+        }
+
+        /* Continuous Pulse Glow */
+        @keyframes subtlePulse {
+            0%, 100% { transform: scale(1); opacity: calc(0.45 * var(--orb-strength, 1)); }
+            50% { transform: scale(1.12); opacity: calc(0.65 * var(--orb-strength, 1)); }
+        }
+        .pulse-glow {
+            animation: subtlePulse 9s infinite ease-in-out;
+        }
+
+        /* Theme Palettes
+           Dark  = near-black.
+           Light = a brighter, soft slate-navy version of dark (keeps light text, easy on the eyes). */
+        html.dark { --orb-strength: 0.5; }
+        html.dark:not(.light) body { background-color: #010103; color: #f1f5f9; }
+        html.dark:not(.light) #cursorOrb { opacity: 0.16; }
+
+        html.light { --orb-strength: 0.85; }
+        html.light body { background-color: #1a1e2f; color: #eef2f8; }
+        html.light .text-slate-500 { color: #a3b1c6; }
+        html.light .text-slate-400 { color: #a9b6ca; }
+        html.light ::-webkit-scrollbar-thumb { background: rgba(190, 200, 225, 0.3); }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans transition-colors duration-500 min-h-screen overflow-x-hidden dark select-none">
+
+    <!-- Interactive Cursor Ambient Glow Orb -->
+    <div id="cursorOrb"></div>
+
+    <!-- Background Ambient Glow Floating Orbs -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div class="ambient-orb ambient-orb-1 pulse-glow w-[550px] h-[550px] -top-32 -left-32"></div>
+        <div class="ambient-orb ambient-orb-2 pulse-glow w-[650px] h-[650px] top-1/2 -right-48" style="animation-delay: -3s;"></div>
+        <div class="ambient-orb ambient-orb-3 pulse-glow w-[500px] h-[500px] -bottom-32 left-1/3" style="animation-delay: -6s;"></div>
+    </div>
+
+    <!-- Floating iOS Glass Nav Header -->
+    <header class="fixed top-5 left-1/2 -translate-x-1/2 w-[92%] max-w-7xl z-50 transition-all duration-300">
+        <nav class="glass-panel rounded-ios-xl px-5 py-3.5 flex items-center justify-between shadow-2xl">
+            <!-- Brand Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 group-hover:scale-110 transition-transform duration-300">
+                    <i data-lucide="clapperboard" class="w-5 h-5"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-extrabold text-xl tracking-tight leading-none bg-clip-text text-transparent bg-gradient-to-r from-slate-100 via-blue-200 to-blue-300 dark:from-white dark:to-slate-300">WAZCLAN</span>
+                    <span class="text-[9px] tracking-[0.25em] font-semibold text-slate-400 uppercase leading-tight mt-0.5">Studios</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <div class="hidden lg:flex items-center gap-1 bg-slate-900/10 dark:bg-white/5 p-1.5 rounded-full border border-black/5 dark:border-white/10">
+                <a href="#services" class="px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-500 dark:hover:text-white rounded-full transition-all hover:bg-white/60 dark:hover:bg-white/10">Services</a>
+                <a href="#photospeak" class="px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-500 dark:hover:text-white rounded-full transition-all hover:bg-white/60 dark:hover:bg-white/10">PhotoSpeak</a>
+                <a href="#about" class="px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-500 dark:hover:text-white rounded-full transition-all hover:bg-white/60 dark:hover:bg-white/10">About Us</a>
+                <a href="#team" class="px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-500 dark:hover:text-white rounded-full transition-all hover:bg-white/60 dark:hover:bg-white/10">Team</a>
+                <a href="#news" class="px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:text-blue-500 dark:hover:text-white rounded-full transition-all hover:bg-white/60 dark:hover:bg-white/10 flex items-center gap-1.5">
+                    <span>News Feed</span>
+                    <span class="w-2 h-2 rounded-full bg-orange-500 animate-ping"></span>
+                </a>
+            </div>
+
+            <!-- Controls & CTAs -->
+            <div class="flex items-center gap-3">
+                <!-- Theme Switcher Toggle -->
+                <button id="themeToggleBtn" onclick="toggleTheme()" class="bubbly-button p-2.5 rounded-full bg-slate-200/80 dark:bg-white/10 border border-slate-300 dark:border-white/15 text-slate-800 dark:text-orange-300 shadow-md" title="Toggle Light/Dark Theme">
+                    <i id="themeIcon" data-lucide="sun" class="w-4 h-4"></i>
+                </button>
+
+                <!-- Admin CMS Modal Toggle -->
+                <button onclick="openAdminModal()" class="hidden sm:flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-full bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 border border-blue-500/30 hover:bg-blue-500 hover:text-white transition-all bubbly-button shadow-md">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span>Admin CMS</span>
+                </button>
+
+                <!-- Contact CTA Button -->
+                <a href="#contact" class="bubbly-button px-5 py-2.5 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-semibold text-xs rounded-full shadow-lg shadow-blue-600/30 flex items-center gap-2">
+                    <span>Contact Us</span>
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+
+                <!-- Mobile Navigation Toggle -->
+                <button onclick="toggleMobileMenu()" class="lg:hidden p-2.5 rounded-2xl bg-slate-200 dark:bg-white/10 text-slate-800 dark:text-white">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Mobile Drawer Navigation -->
+        <div id="mobileMenu" class="hidden lg:hidden mt-3 glass-panel rounded-ios-lg p-6 flex flex-col gap-4 shadow-2xl border border-white/20">
+            <a href="#services" onclick="toggleMobileMenu()" class="text-sm font-semibold hover:text-blue-500 py-2 border-b border-white/5 flex justify-between items-center">
+                <span>Production Services</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+            </a>
+            <a href="#photospeak" onclick="toggleMobileMenu()" class="text-sm font-semibold hover:text-blue-500 py-2 border-b border-white/5 flex justify-between items-center">
+                <span>PhotoSpeak Gallery</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+            </a>
+            <a href="#about" onclick="toggleMobileMenu()" class="text-sm font-semibold hover:text-blue-500 py-2 border-b border-white/5 flex justify-between items-center">
+                <span>About Us</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+            </a>
+            <a href="#team" onclick="toggleMobileMenu()" class="text-sm font-semibold hover:text-blue-500 py-2 border-b border-white/5 flex justify-between items-center">
+                <span>Meet The Team</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+            </a>
+            <a href="#news" onclick="toggleMobileMenu()" class="text-sm font-semibold hover:text-blue-500 py-2 border-b border-white/5 flex justify-between items-center">
+                <span>News & Updates</span>
+                <i data-lucide="chevron-right" class="w-4 h-4 opacity-50"></i>
+            </a>
+            <button onclick="openAdminModal(); toggleMobileMenu();" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-blue-600 text-white font-medium text-xs mt-2 bubbly-button">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Publish Update (Admin Portal)</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="relative z-10 pt-32">
+        <!-- Hero Section -->
+        <section class="max-w-7xl mx-auto px-6 pt-10 pb-20 flex flex-col items-center text-center relative">
+            <!-- iOS Glass Badge -->
+            <div class="inline-flex items-center gap-2.5 px-4 py-2 rounded-full glass-card text-xs font-semibold tracking-wide text-blue-600 dark:text-blue-400 mb-8 border border-blue-500/30 bubbly-button shadow-lg">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></span>
+                <span>Cinema Grade Production House & Creative Studio</span>
+                <i data-lucide="sparkles" class="w-4 h-4 text-orange-400"></i>
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight max-w-5xl leading-[1.08] mb-8">
+                Capturing <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-orange-400">Unforgettable Stories</span> Through Visual Mastery.
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-base sm:text-xl text-slate-600 dark:text-slate-300 max-w-3xl font-normal leading-relaxed mb-10">
+                From high-octane stadium concerts and music videos to award-winning documentaries and high-profile corporate commercials, WAZCLAN crafts groundbreaking cinematic experiences.
+            </p>
+
+            <!-- CTA Row -->
+            <div class="flex flex-wrap items-center justify-center gap-5 mb-16">
+                <a href="#photospeak" class="bubbly-button px-8 py-4 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-500 hover:to-orange-400 text-white font-bold text-sm rounded-full shadow-2xl shadow-blue-500/30 flex items-center gap-3">
+                    <i data-lucide="play-circle" class="w-5 h-5"></i>
+                    <span>Explore PhotoSpeak Gallery</span>
+                </a>
+                <button onclick="openVideoModal('https://www.youtube.com/embed/dQw4w9WgXcQ', 'WAZCLAN 2026 Showreel')" class="bubbly-button px-8 py-4 glass-panel text-slate-800 dark:text-white font-bold text-sm rounded-full flex items-center gap-3 border border-white/20">
+                    <i data-lucide="film" class="w-5 h-5 text-orange-500"></i>
+                    <span>Watch Showreel 2026</span>
+                </button>
+            </div>
+
+            <!-- Interactive 3D Tilted Hero Banner Container -->
+            <div class="w-full max-w-5xl tilt-card rounded-ios-xl p-3 glass-panel border border-white/30 shadow-2xl relative cursor-pointer group" onclick="openVideoModal('https://www.youtube.com/embed/L_LUpnjgPso', 'WAZCLAN Cinematic Masterpiece Reel')">
+                <div class="relative w-full aspect-video rounded-ios-lg overflow-hidden bg-slate-900 shadow-inner">
+                    <img src="https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=1800&q=80" alt="Production Showreel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent flex flex-col justify-between p-8">
+                        <!-- Top Bar Badges -->
+                        <div class="flex items-center justify-between">
+                            <span class="px-4 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold border border-white/20 flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span> 8K RAW Cinema Multi-Cam
+                            </span>
+                            <span class="px-4 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-semibold border border-white/20">
+                                02:45 Min Highlight
+                            </span>
+                        </div>
+                        
+                        <!-- Center Play Button with Specular Ripple -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-24 h-24 rounded-full bg-white/20 backdrop-blur-2xl border border-white/50 flex items-center justify-center text-white shadow-2xl group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300">
+                                <i data-lucide="play" class="w-10 h-10 fill-white translate-x-1"></i>
+                            </div>
+                        </div>
+
+                        <!-- Bottom Information -->
+                        <div class="text-left">
+                            <h3 class="text-2xl sm:text-3xl font-black text-white mb-1">WAZCLAN Cinematic Experience</h3>
+                            <p class="text-xs sm:text-sm text-slate-300 font-light max-w-xl">Featuring highlights from international concerts, award-winning documentaries, luxury weddings, and fashion visual films.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-200/50 dark:border-white/10">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold text-xs tracking-wider uppercase border border-blue-500/20">Our Capabilities</span>
+                <h2 class="text-3xl sm:text-5xl font-black tracking-tight mt-4 mb-4">Production Services</h2>
+                <p class="text-slate-600 dark:text-slate-300 text-base">End-to-end studio solutions tailored for world-class musicians, brands, filmmakers, and private clients.</p>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1: Concerts -->
+                <div class="tilt-card glass-card p-8 rounded-ios-lg flex flex-col justify-between relative group">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-blue-500/20 text-blue-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="ticket" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Concerts & Live Events</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 font-light">
+                            Multi-camera live broadcast, stadium concert films, and aerial drone coverage with real-time color grading and spatial sound audio engineering.
+                        </p>
+                    </div>
+                    <div class="pt-5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-400">12 Camera Synchronized Rig</span>
+                        <button onclick="openDetailModal('Concerts & Stadium Events', 'We deploy up to 12 cinema-grade cameras equipped with motorized crane arms, FPV drone support, and instant live broadcast switching for massive stadium events.', 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80')" class="text-xs font-bold text-blue-500 hover:text-blue-400 flex items-center gap-1.5 bubbly-button">
+                            <span>Explore Details</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Service Card 2: Music Videos -->
+                <div class="tilt-card glass-card p-8 rounded-ios-lg flex flex-col justify-between relative group">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-orange-500/20 text-orange-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="music" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Music Videos</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 font-light">
+                            High-concept art direction, dynamic set design, custom visual effects (VFX), and master color grading that elevate music tracks onto global charts.
+                        </p>
+                    </div>
+                    <div class="pt-5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-400">Full VFX & Color Suite</span>
+                        <button onclick="openDetailModal('Music Videos & Visual Arts', 'From initial creative concept and storyboarding to location scouting, lighting design, and CGI integration, we turn songs into viral visual masterpieces.', 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80')" class="text-xs font-bold text-orange-500 hover:text-orange-400 flex items-center gap-1.5 bubbly-button">
+                            <span>Explore Details</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Service Card 3: Documentaries -->
+                <div class="tilt-card glass-card p-8 rounded-ios-lg flex flex-col justify-between relative group">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-blue-500/20 text-blue-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="file-text" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Documentaries</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 font-light">
+                            Deep human stories captured with warmth, integrity, and cinematic flair. Complete investigative storytelling from research to sound design.
+                        </p>
+                    </div>
+                    <div class="pt-5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-400">Scripting & Field Sound</span>
+                        <button onclick="openDetailModal('Cinematic Documentaries', 'Documentary filmmaking that honors authentic human experience. We provide complete narrative scripting, field sound mixing, and festival release preparation.', 'https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=1200&q=80')" class="text-xs font-bold text-orange-500 hover:text-orange-400 flex items-center gap-1.5 bubbly-button">
+                            <span>Explore Details</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Service Card 4: Luxury Weddings -->
+                <div class="tilt-card glass-card p-8 rounded-ios-lg flex flex-col justify-between relative group">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-orange-500/20 text-orange-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="heart" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Luxury Weddings</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 font-light">
+                            Timeless, romantic cinematic wedding films preserving emotional moments, candid joy, and grand celebrations with pristine clarity.
+                        </p>
+                    </div>
+                    <div class="pt-5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-400">Drone & Same-Day Edit</span>
+                        <button onclick="openDetailModal('Luxury Wedding Cinema', 'Bespoke wedding cinema capturing emotional candid moments, aerial estate photography, and same-day reception teaser highlight reels.', 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80')" class="text-xs font-bold text-orange-500 hover:text-orange-400 flex items-center gap-1.5 bubbly-button">
+                            <span>Explore Details</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Service Card 5: Commercials -->
+                <div class="tilt-card glass-card p-8 rounded-ios-lg flex flex-col justify-between relative group">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-blue-500/20 text-blue-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="mic-2" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Commercials & Interviews</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 font-light">
+                            High-end corporate talk shows, executive leadership interviews, and commercial ad spots engineered for conversion and prestige.
+                        </p>
+                    </div>
+                    <div class="pt-5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-400">Mobile Acoustic Sound Pod</span>
+                        <button onclick="openDetailModal('Corporate Commercials & Leadership Interviews', 'Polished corporate communications, product launch keynotes, and commercial spots crafted for television broadcast and digital campaigns.', 'https://images.unsplash.com/photo-1598899134739-24c46f58b8c0?auto=format&fit=crop&w=1200&q=80')" class="text-xs font-bold text-blue-500 hover:text-blue-400 flex items-center gap-1.5 bubbly-button">
+                            <span>Explore Details</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Service Card 6: BTS -->
+                <div class="tilt-card glass-card p-8 rounded-ios-lg flex flex-col justify-between relative group">
+                    <div>
+                        <div class="w-16 h-16 rounded-2xl bg-orange-500/20 text-orange-500 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <i data-lucide="camera" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-3">Behind The Scenes (BTS)</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed mb-6 font-light">
+                            Exclusive BTS video coverage, photojournalism, vertical micro-content, and promo reels for film sets and album launches.
+                        </p>
+                    </div>
+                    <div class="pt-5 border-t border-slate-200 dark:border-white/10 flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-400">Vertical Reel Formatting</span>
+                        <button onclick="openDetailModal('Behind-The-Scenes (BTS)', 'Engaging micro-documentaries, social media teasers, and set photography that build audience hype for major releases.', 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&w=1200&q=80')" class="text-xs font-bold text-orange-500 hover:text-orange-400 flex items-center gap-1.5 bubbly-button">
+                            <span>Explore Details</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PhotoSpeak Gallery Section -->
+        <section id="photospeak" class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-200/50 dark:border-white/10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
+                <div>
+                    <span class="px-4 py-1.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold text-xs tracking-wider uppercase border border-orange-500/20">Visual Showcase</span>
+                    <h2 class="text-3xl sm:text-5xl font-black tracking-tight mt-4">PhotoSpeak Gallery</h2>
+                </div>
+                <p class="text-slate-500 dark:text-slate-400 text-sm max-w-md mt-4 md:mt-0 font-light">
+                    Every frame tells a story. High-resolution visual capture cards from recent worldwide productions. Click any image to open full screen lightbox.
+                </p>
+            </div>
+
+            <!-- PhotoSpeak Grid Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <!-- Photo Card 1 -->
+                <div class="tilt-card glass-card group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=1800&q=80', 'Serenade in Monaco - Luxury Wedding')">
+                    <div class="aspect-[4/3] overflow-hidden relative">
+                        <img src="assets/IMG_4254.JPG" alt="Wedding Couple" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-semibold text-white border border-white/20">
+                            BTS Equipments
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-1 group-hover:text-orange-500 transition-colors">Serenade in Monaco</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-light">An ethereal sunset cliffside ceremony along the French Riviera.</p>
+                    </div>
+                </div>
+
+                <!-- Photo Card 2 -->
+                 <div class="tilt-card glass-card group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&w=1800&q=80', 'Deep Forest Soundscapes - Documentary')">
+                    <div class="aspect-[4/3] overflow-hidden relative">
+                        <img src="assets/IMG_E0091.JPG" alt="Documentary" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-semibold text-white border border-white/20">
+                            BTS Scene
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-1 group-hover:text-blue-500 transition-colors">Deep Forest Soundscapes</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-light">Exploring undisturbed acoustic ecosystems in the Amazon rainforest.</p>
+                    </div>
+                </div>
+
+                <!-- Photo Card 3 -->
+                <div class="tilt-card glass-card group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&w=1800&q=80', 'Deep Forest Soundscapes - Documentary')">
+                    <div class="aspect-[4/3] overflow-hidden relative">
+                        <img src="assets/IMG_0788.JPG" alt="Documentary" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-semibold text-white border border-white/20">
+                            BTS Scene
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-1 group-hover:text-blue-500 transition-colors">Deep Forest Soundscapes</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-light">Exploring undisturbed acoustic ecosystems in the Amazon rainforest.</p>
+                    </div>
+                </div>
+
+                <!-- Photo Card 4 -->
+                <div class="tilt-card glass-card group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&w=1800&q=80', 'Deep Forest Soundscapes - Documentary')">
+                    <div class="aspect-[4/3] overflow-hidden relative">
+                        <img src="assets/IMG_E4328.JPG" alt="Documentary" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-semibold text-white border border-white/20">
+                            BTS Scene
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-1 group-hover:text-blue-500 transition-colors">Deep Forest Soundscapes</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-light">Exploring undisturbed acoustic ecosystems in the Amazon rainforest.</p>
+                    </div>
+                </div>
+
+              
+                <!-- Photo Card 5 -->
+                <div class="tilt-card glass-card group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&w=1800&q=80', 'Deep Forest Soundscapes - Documentary')">
+                    <div class="aspect-[4/3] overflow-hidden relative">
+                        <img src="assets/IMG_0787.JPG" alt="Documentary" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-semibold text-white border border-white/20">
+                            BTS Scene
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-1 group-hover:text-blue-500 transition-colors">Deep Forest Soundscapes</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-light">Exploring undisturbed acoustic ecosystems in the Amazon rainforest.</p>
+                    </div>
+                </div>
+
+                  <!-- Photo Card 6 -->
+                <div class="tilt-card glass-card group cursor-pointer" onclick="openLightbox('https://images.unsplash.com/photo-1518173946687-a4c8a383392e?auto=format&fit=crop&w=1800&q=80', 'Deep Forest Soundscapes - Documentary')">
+                    <div class="aspect-[4/3] overflow-hidden relative">
+                        <img src="assets/IMG_E0440.jpg" alt="Documentary" class="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700">
+                        <div class="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3.5 py-1 rounded-full text-xs font-semibold text-white border border-white/20">
+                            BTS Scene
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="font-bold text-xl mb-1 group-hover:text-blue-500 transition-colors">Deep Forest Soundscapes</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-light">Exploring undisturbed acoustic ecosystems in the Amazon rainforest.</p>
+                    </div>
+                </div>
+
+                
+
+            </div>
+        </section>
+
+        <!-- About Us Section -->
+        <section id="about" class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-200/50 dark:border-white/10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Description -->
+                <div>
+                    <span class="px-4 py-1.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold text-xs tracking-wider uppercase border border-orange-500/20">About WAZCLAN</span>
+                    <h2 class="text-3xl sm:text-5xl font-black tracking-tight mt-4 mb-6">Creative & dedicated wholesome quality content that inspires. </h2>
+                    <p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-6 font-light">
+                       Born out of the pure passion for all this media,  we strive go above and beyond our clients expectations.  We use emerging technology. While leveraging on classic skills that provide a human touch.
+                    </p>
+                    
+                    <!-- Key Statistics -->
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <div class="tilt-card p-5 rounded-ios glass-card">
+                            <div class="text-3xl font-black text-blue-500">500+</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-1">Projects Delivered</div>
+                        </div>
+                        <div class="tilt-card p-5 rounded-ios glass-card">
+                            <div class="text-3xl font-black text-orange-500">10+</div>
+                            <div class="text-xs text-slate-500 dark:text-slate-400 font-semibold mt-1">States Filmed</div>
+                        </div>
+                    </div>
+
+                    <a href="#contact" class="inline-flex items-center gap-2 font-bold text-sm text-blue-500 hover:text-blue-400 bubbly-button">
+                        <span>Learn more about our production pipeline</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <!-- Integrated 1-Minute Video Player Container -->
+                <div class="tilt-card glass-panel p-5 rounded-ios-xl border border-white/30 shadow-2xl relative">
+                    <div class="text-xs font-bold text-slate-400 mb-3 flex items-center justify-between px-2">
+                        <span class="flex items-center gap-2">
+                            <i data-lucide="play-circle" class="w-4 h-4 text-orange-500"></i>
+                            <span>1-Minute Studio Intro Video</span>
+                        </span>
+                        <span class="bg-orange-500/20 text-orange-400 px-3 py-0.5 rounded-full text-[10px] font-bold">1080p HD</span>
+                    </div>
+
+                    <!-- Video Container -->
+                    <div class="relative aspect-video rounded-ios-lg overflow-hidden bg-black group">
+                        <video id="introVideo" class="w-full h-full object-cover" poster="https://images.unsplash.com/photo-1536240478700-b869070f9279?auto=format&fit=crop&w=1200&q=80">
+                            <source src="assets/WNVT1744.MP4" type="video/mp4">
+                            Your browser does not support video playback.
+                        </video>
+
+                        <!-- iOS Custom Video Control Overlay -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-5">
+                            <div class="text-right">
+                                <span id="videoTime" class="text-xs font-mono text-white bg-black/60 px-3 py-1 rounded-md border border-white/20">00:00 / 00:15</span>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                <button onclick="togglePlayIntro()" id="playPauseBtn" class="w-11 h-11 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/40 bubbly-button">
+                                    <i data-lucide="play" class="w-5 h-5 fill-white"></i>
+                                </button>
+                                <div class="flex-1 bg-white/30 h-2 rounded-full overflow-hidden cursor-pointer" onclick="seekIntroVideo(event)">
+                                    <div id="videoProgress" class="bg-blue-500 h-full w-0 transition-all duration-150"></div>
+                                </div>
+                                <button onclick="toggleMuteIntro()" id="muteBtn" class="p-2.5 rounded-full bg-white/20 backdrop-blur-md text-white hover:text-blue-400 bubbly-button">
+                                    <i data-lucide="volume-2" class="w-5 h-5"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BTS Photo Grid -->
+            <div class="mt-20">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h3 class="text-2xl font-bold">Behind The Scenes (BTS)</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">On-location camera rigs, soundstages, and aerial gear.</p>
+                    </div>
+                    <span class="text-xs text-slate-400 font-mono bg-white/10 px-3 py-1 rounded-full border border-white/10">ON SET SNAPSHOTS</span>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-5">
+                    <div class="tilt-card aspect-square rounded-ios overflow-hidden glass-card cursor-pointer group" onclick="openLightbox('assets/WhatsApp Image 2026-10-01 at 7.30.54 PM.jpeg', 'Scene Setup')">
+                        <img src="assets/WhatsApp Image 2026-10-01 at 7.30.54 PM.jpeg" alt="BTS 1" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="tilt-card aspect-square rounded-ios overflow-hidden glass-card cursor-pointer group" onclick="openLightbox('assets/WhatsApp Image 2026-10-01 at 7.32.54 PM.jpeg', 'Shoot')">
+                        <img src="assets/WhatsApp Image 2026-10-01 at 7.32.54 PM.jpeg" alt="BTS 2" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="tilt-card aspect-square rounded-ios overflow-hidden glass-card cursor-pointer group" onclick="openLightbox('assets/WhatsApp Image 2026-09-16 at 9.49.20 AM.jpeg', 'Drones & Equipments')">
+                        <img src="assets/WhatsApp Image 2026-09-16 at 9.49.20 AM.jpeg" alt="BTS 3" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    <div class="tilt-card aspect-square rounded-ios overflow-hidden glass-card cursor-pointer group" onclick="openLightbox('assets/WhatsApp Image 2026-09-16 at 9.45.42 PM.jpeg', 'Studio')">
+                        <img src="assets/WhatsApp Image 2026-09-16 at 9.45.42 PM.jpeg" alt="BTS 4" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meet the Team Section -->
+        <section id="team" class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-200/50 dark:border-white/10">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="px-4 py-1.5 rounded-full bg-orange-500/10 text-orange-600 dark:text-orange-400 font-bold text-xs tracking-wider uppercase border border-orange-500/20">Creative Minds</span>
+                <h2 class="text-3xl sm:text-5xl font-black tracking-tight mt-4 mb-4">Meet the Team</h2>
+                <p class="text-slate-600 dark:text-slate-300 text-base">The directors, cinematographers, and audio engineers behind the lens.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Team Member 1 -->
+                <div class="tilt-card glass-card rounded-ios-lg p-6 flex flex-col items-center text-center group">
+                    <div class="w-32 h-32 rounded-full overflow-hidden mb-6 p-1 border-2 border-blue-500/40 group-hover:border-blue-500 transition-colors shadow-lg">
+                        <img src="assets/Profiles/IMG_E0440.jpg" alt="Shalom Yaduma" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <h3 class="text-xl font-bold">Shalom Yaduma</h3>
+                    <span class="text-xs text-blue-500 font-bold mb-3">Creative Director</span>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 font-light">
+                        10+ years directing award-winning festival films and music videos worldwide.
+                    </p>
+                    <div class="flex items-center gap-3 mt-auto">
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-blue-500 hover:text-white transition-colors bubbly-button"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-blue-500 hover:text-white transition-colors bubbly-button"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-blue-500 hover:text-white transition-colors bubbly-button"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+
+                <!-- Team Member 2 -->
+                <div class="tilt-card glass-card rounded-ios-lg p-6 flex flex-col items-center text-center group">
+                    <div class="w-32 h-32 rounded-full overflow-hidden mb-6 p-1 border-2 border-blue-500/40 group-hover:border-blue-500 transition-colors shadow-lg">
+                        <img src="assets/Profiles/IMG_E0920.JPG" alt="Sheriff Joe" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <h3 class="text-xl font-bold">Sheriff Joe</h3>
+                    <span class="text-xs text-blue-500 font-bold mb-3">Lead Cinematographer</span>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 font-light">
+                        Master of high-speed lighting rigs, stadium cranes, and RED camera systems.
+                    </p>
+                    <div class="flex items-center gap-3 mt-auto">
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-blue-500 hover:text-white transition-colors bubbly-button"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-blue-500 hover:text-white transition-colors bubbly-button"><i data-lucide="youtube" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+
+                <!-- Team Member 3 -->
+                <div class="tilt-card glass-card rounded-ios-lg p-6 flex flex-col items-center text-center group">
+                    <div class="w-32 h-32 rounded-full overflow-hidden mb-6 p-1 border-2 border-orange-500/40 group-hover:border-orange-500 transition-colors shadow-lg">
+                        <img src="assets/Profiles/POOJ7580.JPG" alt="Comfort Omniwa" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <h3 class="text-xl font-bold">Comfort Omniwa</h3>
+                    <span class="text-xs text-orange-500 font-bold mb-3">Senior Sound Engineer</span>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 font-light">
+                        Dolby Atmos certified mixer. Specialist in spatial acoustics and live stage sound.
+                    </p>
+                    <div class="flex items-center gap-3 mt-auto">
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-orange-500 hover:text-white transition-colors bubbly-button"><i data-lucide="music-2" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-orange-500 hover:text-white transition-colors bubbly-button"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+
+                <!-- Team Member 4 -->
+                <div class="tilt-card glass-card rounded-ios-lg p-6 flex flex-col items-center text-center group">
+                    <div class="w-32 h-32 rounded-full overflow-hidden mb-6 p-1 border-2 border-blue-500/40 group-hover:border-blue-500 transition-colors shadow-lg">
+                        <img src="assets/Profiles/IMG_E3679.JPG" alt="Oluwapelumi Samuel" class="w-full h-full object-cover rounded-full group-hover:scale-105 transition-transform duration-300">
+                    </div>
+                    <h3 class="text-xl font-bold">Oluwapelumi Samuel</h3>
+                    <span class="text-xs text-blue-500 font-bold mb-3">Head of Post-Production</span>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 font-light">
+                        DaVinci Resolve Master Colorist and 3D visual effects director.
+                    </p>
+                    <div class="flex items-center gap-3 mt-auto">
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-blue-500 hover:text-white transition-colors bubbly-button"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+                        <a href="#" class="p-2.5 rounded-full bg-slate-200 dark:bg-white/10 hover:bg-blue-500 hover:text-white transition-colors bubbly-button"><i data-lucide="globe" class="w-4 h-4"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic News & Updates Section -->
+        <section id="news" class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-200/50 dark:border-white/10">
+            <div class="flex flex-col md:flex-row items-start md:items-end justify-between mb-16">
+                <div>
+                    <span class="px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold text-xs tracking-wider uppercase border border-blue-500/20">Live Feed</span>
+                    <h2 class="text-3xl sm:text-5xl font-black tracking-tight mt-4">News & Updates</h2>
+                </div>
+                
+                <button onclick="openAdminModal()" class="mt-4 md:mt-0 bubbly-button px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-full flex items-center gap-2 shadow-lg shadow-blue-600/30">
+                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                    <span>Admin Publish Portal</span>
+                </button>
+            </div>
+
+            <!-- Dynamic News Container -->
+            <div id="newsFeedContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Posts will be loaded from LocalStorage or Default State via JS -->
+            </div>
+        </section>
+
+        <!-- Contact Us Section -->
+        <section id="contact" class="max-w-7xl mx-auto px-6 py-24 border-t border-slate-200/50 dark:border-white/10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div>
+                    <span class="px-4 py-1.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold text-xs tracking-wider uppercase border border-blue-500/20">Get In Touch</span>
+                    <h2 class="text-3xl sm:text-5xl font-black tracking-tight mt-4 mb-6">Let's Create Something Iconic Together.</h2>
+                    <p class="text-slate-600 dark:text-slate-300 text-base leading-relaxed mb-8 font-light">
+                        Planning an upcoming stadium concert, music video, or high-profile commercial? Fill out the inquiry form or contact our studio producers directly.
+                    </p>
+
+                    <!-- Contact Details -->
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center gap-4 glass-card p-4 rounded-ios">
+                            <div class="p-3 rounded-2xl bg-blue-500/20 text-blue-500"><i data-lucide="mail" class="w-5 h-5"></i></div>
+                            <div>
+                                <div class="text-xs text-slate-400 font-medium">Direct Inquiries</div>
+                                <div class="font-bold text-sm">wazclanproductions@gmail.com</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 glass-card p-4 rounded-ios">
+                            <div class="p-3 rounded-2xl bg-blue-500/20 text-blue-500"><i data-lucide="phone" class="w-5 h-5"></i></div>
+                            <div>
+                                <div class="text-xs text-slate-400 font-medium">Studio Line</div>
+                                <div class="font-bold text-sm"> +2348050644234</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 glass-card p-4 rounded-ios">
+                            <div class="p-3 rounded-2xl bg-orange-500/20 text-orange-500"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
+                            <div>
+                                <div class="text-xs text-slate-400 font-medium">Global Headquarters</div>
+                                <div class="font-bold text-sm">001 wazclanproductions Studio Complex, Abuja</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Glassmorphism Inquiry Form -->
+                <div class="glass-panel p-8 rounded-ios-xl border border-white/20 shadow-2xl">
+                    <h3 class="text-2xl font-bold mb-6">Start Your Production Booking</h3>
+                    <form onsubmit="handleContactSubmit(event)" class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-2">Full Name</label>
+                            <input type="text" required placeholder="e.g. John Doe" class="w-full px-4 py-3.5 rounded-xl bg-slate-100 dark:bg-white/10 border border-slate-300 dark:border-white/15 focus:outline-none focus:border-blue-500 text-sm font-medium">
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 mb-2">Email Address</label>
+                                <input type="email" required placeholder="john@company.com" class="w-full px-4 py-3.5 rounded-xl bg-slate-100 dark:bg-white/10 border border-slate-300 dark:border-white/15 focus:outline-none focus:border-blue-500 text-sm font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-400 mb-2">Project Category</label>
+                                <select class="w-full px-4 py-3.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-white/15 focus:outline-none focus:border-blue-500 text-sm text-slate-800 dark:text-white font-medium">
+                                    <option>Concerts & Live Events</option>
+                                    <option>Music Video</option>
+                                    <option>Documentary</option>
+                                    <option>Luxury Wedding</option>
+                                    <option>Commercial / Interview</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-2">Project Brief & Timeline</label>
+                            <textarea rows="4" required placeholder="Tell us about your visual vision, locations, and timeframe..." class="w-full px-4 py-3.5 rounded-xl bg-slate-100 dark:bg-white/10 border border-slate-300 dark:border-white/15 focus:outline-none focus:border-blue-500 text-sm font-medium"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all bubbly-button text-sm uppercase tracking-wider">
+                            Submit Production Inquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-200/50 dark:border-white/10 py-12 max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500">
+        <p>© 2026 WAZCLAN Production House. All rights reserved.</p>
+        <div class="flex items-center gap-6 mt-4 sm:mt-0">
+            <a href="#" class="hover:text-blue-500 transition-colors">Privacy Policy</a>
+            <a href="#" class="hover:text-blue-500 transition-colors">Terms of Service</a>
+            <a href="#" class="hover:text-blue-500 transition-colors">Press Kit</a>
+        </div>
+    </footer>
+
+    <!-- MODALS ENGINE -->
+
+    <!-- 1. Video Player Modal -->
+    <div id="videoModal" class="fixed inset-0 bg-black/85 backdrop-blur-2xl z-[100] flex items-center justify-center p-4 modal-overlay">
+        <div class="relative w-full max-w-4xl bg-black rounded-ios-xl overflow-hidden border border-white/20 shadow-2xl modal-content">
+            <div class="p-4 bg-slate-900 border-b border-white/10 flex items-center justify-between">
+                <span id="videoModalTitle" class="text-sm font-bold text-white flex items-center gap-2">
+                    <i data-lucide="film" class="w-4 h-4 text-orange-500"></i> Video Showcase
+                </span>
+                <button onclick="closeVideoModal()" class="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors bubbly-button">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="aspect-video w-full bg-black">
+                <iframe id="videoModalIframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Lightbox Image Modal -->
+    <div id="lightboxModal" class="fixed inset-0 bg-black/90 backdrop-blur-2xl z-[100] flex items-center justify-center p-4 modal-overlay" onclick="closeLightbox()">
+        <div class="relative max-w-5xl max-h-[90vh] modal-content flex flex-col items-center" onclick="event.stopPropagation()">
+            <button onclick="closeLightbox()" class="absolute -top-12 right-0 p-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors bubbly-button">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            <img id="lightboxImg" src="" alt="Full View" class="max-h-[80vh] w-auto rounded-ios border border-white/20 shadow-2xl object-contain">
+            <div id="lightboxCaption" class="mt-4 text-center text-sm font-semibold text-slate-300 bg-black/60 px-6 py-2 rounded-full border border-white/10 backdrop-blur-md"></div>
+        </div>
+    </div>
+
+    <!-- 3. Detail Service Modal -->
+    <div id="detailModal" class="fixed inset-0 bg-black/80 backdrop-blur-2xl z-[100] flex items-center justify-center p-4 modal-overlay">
+        <div class="relative w-full max-w-2xl glass-panel p-8 rounded-ios-xl border border-white/20 shadow-2xl modal-content">
+            <button onclick="closeDetailModal()" class="absolute top-6 right-6 p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors bubbly-button">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div id="detailModalImageContainer" class="hidden aspect-video rounded-ios overflow-hidden mb-6 border border-white/10">
+                <img id="detailModalImage" src="" alt="Feature Detail" class="w-full h-full object-cover">
+            </div>
+            <h3 id="detailModalTitle" class="text-2xl font-extrabold mb-4"></h3>
+            <p id="detailModalDesc" class="text-slate-300 text-sm leading-relaxed font-light mb-6"></p>
+            <div class="flex justify-end">
+                <button onclick="closeDetailModal()" class="px-6 py-2.5 rounded-full bg-blue-600 text-white font-bold text-xs bubbly-button">Close Window</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Admin CMS News Publish Portal (With Dual URL/Local File Input & Live Preview) -->
+    <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-2xl z-[100] flex items-center justify-center p-4 modal-overlay">
+        <div class="relative w-full max-w-xl glass-panel p-8 rounded-ios-xl border border-white/20 shadow-2xl modal-content max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-2xl bg-blue-500/20 text-blue-400">
+                        <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-extrabold">Admin CMS Portal</h3>
+                        <p class="text-xs text-slate-400">Publish news, announcements, or media updates</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminModal()" class="p-2 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors bubbly-button">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Admin Login View -->
+            <div id="adminLoginView">
+                <p class="text-xs text-slate-400 mb-4">Enter the admin password to post or delete updates.</p>
+                <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Admin Password</label>
+                        <input type="password" id="adminPassword" required autocomplete="current-password" placeholder="Enter password" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/15 text-white focus:outline-none focus:border-blue-500 text-sm">
+                    </div>
+                    <p id="adminLoginError" class="hidden text-xs text-red-400 font-semibold">Wrong password, try again.</p>
+                    <button type="submit" class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-500 hover:to-orange-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 bubbly-button">
+                        Unlock Admin
+                    </button>
+                </form>
+            </div>
+
+            <form id="adminForm" onsubmit="handlePostNews(event)" class="space-y-4 hidden">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-blue-400 font-semibold">Logged in as admin</span>
+                    <button type="button" onclick="adminLogout()" class="font-semibold text-slate-400 hover:text-white hover:underline">Log out</button>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Update Title</label>
+                    <input type="text" id="postTitle" required placeholder="e.g. WAZCLAN Drone Fleet Expanded" class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/15 text-white focus:outline-none focus:border-blue-500 text-sm">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Category Tag</label>
+                        <select id="postCategory" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-white/15 text-white focus:outline-none focus:border-blue-500 text-sm">
+                            <option>Announcement</option>
+                            <option>Commercial Release</option>
+                            <option>Award News</option>
+                            <option>Behind The Scenes</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Media Format</label>
+                        <select id="newsMediaType" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-white/15 text-white focus:outline-none focus:border-blue-500 text-sm" onchange="handleMediaFormatChange()">
+                            <option value="image">Photo / Graphic</option>
+                            <option value="video">Commercial Video</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dual Upload Switcher Toggle -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Media Input Method</label>
+                    <div class="flex items-center gap-2 p-1.5 bg-slate-900/80 rounded-xl border border-white/10 mb-3">
+                        <button type="button" id="mediaTypeUrlBtn" class="flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm" onclick="setMediaTypeInput('url')">
+                            External URL
+                        </button>
+                        <button type="button" id="mediaTypeFileBtn" class="flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white" onclick="setMediaTypeInput('file')">
+                            Local File Upload
+                        </button>
+                    </div>
+
+                    <!-- URL Input Container -->
+                    <div id="mediaUrlContainer">
+                        <input type="url" id="postImageUrl" placeholder="https://images.unsplash.com/..." class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/15 text-white focus:outline-none focus:border-blue-500 text-sm" oninput="handleMediaInputChange()">
+                    </div>
+
+                    <!-- Local File Picker Container -->
+                    <div id="mediaFileContainer" class="hidden">
+                        <div class="border-2 border-dashed border-white/20 hover:border-blue-500/50 transition-colors rounded-xl p-4 text-center bg-slate-900/40">
+                            <input type="file" id="newsFileInput" accept="image/*,video/*" class="hidden" onchange="handleFileUpload(event)">
+                            <button type="button" onclick="document.getElementById('newsFileInput').click()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-500/20 text-blue-300 text-xs font-bold hover:bg-blue-500/30 transition-all border border-blue-500/30 mb-1 bubbly-button">
+                                <i data-lucide="upload" class="w-4 h-4"></i> Select Media File
+                            </button>
+                            <p id="fileNameDisplay" class="text-xs text-slate-400 mt-1 truncate">No file selected (Supports JPG, PNG, WEBP, MP4)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Media Preview Box -->
+                <div id="mediaPreviewContainer" class="hidden relative rounded-xl overflow-hidden border border-white/15 bg-slate-950 h-40 flex items-center justify-center">
+                    <img id="mediaPreviewImg" src="" alt="Preview" class="w-full h-full object-cover hidden">
+                    <video id="mediaPreviewVid" src="" controls class="w-full h-full object-cover hidden"></video>
+                    <button type="button" onclick="clearMediaPreview()" class="absolute top-2 right-2 bg-black/80 hover:bg-red-600 text-white p-1.5 rounded-full text-xs transition-colors shadow">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Story Excerpt & Details</label>
+                    <textarea id="postContent" rows="3" required placeholder="Write update summary..." class="w-full px-4 py-3 rounded-xl bg-slate-900/80 border border-white/15 text-white focus:outline-none focus:border-blue-500 text-sm"></textarea>
+                </div>
+
+                <div class="flex items-center justify-between pt-4 border-t border-white/10">
+                    <button type="button" onclick="resetNewsFeed()" class="text-xs font-semibold text-red-400 hover:underline">Reset to Default Posts</button>
+                    <button type="submit" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-orange-500 hover:from-blue-500 hover:to-orange-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 bubbly-button">
+                        Publish To Feed
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /* Dual Input File Upload Logic */
+        let currentMediaTypeMode = 'url';
+        let uploadedBase64Media = '';
+
+        function setMediaTypeInput(mode) {
+            currentMediaTypeMode = mode;
+            const urlBtn = document.getElementById('mediaTypeUrlBtn');
+            const fileBtn = document.getElementById('mediaTypeFileBtn');
+            const urlContainer = document.getElementById('mediaUrlContainer');
+            const fileContainer = document.getElementById('mediaFileContainer');
+
+            if (mode === 'url') {
+                urlBtn.className = "flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm";
+                fileBtn.className = "flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white";
+                urlContainer.classList.remove('hidden');
+                fileContainer.classList.add('hidden');
+            } else {
+                fileBtn.className = "flex-1 py-2 px-3 rounded-lg text-xs font-bold transition-all bg-blue-600 text-white shadow-sm";
+                urlBtn.className = "flex-1 py-2 px-3 rounded-lg text-xs font-semibold transition-all text-slate-400 hover:text-white";
+                fileContainer.classList.remove('hidden');
+                urlContainer.classList.add('hidden');
+            }
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('fileNameDisplay').innerText = `Selected: ${file.name} (${(file.size/1024/1024).toFixed(2)} MB)`;
+
+            const isVid = file.type.startsWith('video/');
+            document.getElementById('newsMediaType').value = isVid ? 'video' : 'image';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedBase64Media = e.target.result;
+                showMediaPreview(uploadedBase64Media, isVid ? 'video' : 'image');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleMediaInputChange() {
+            const url = document.getElementById('postImageUrl').value.trim();
+            const mediaType = document.getElementById('newsMediaType').value;
+            if (url) {
+                showMediaPreview(url, mediaType);
+            } else {
+                clearMediaPreview();
+            }
+        }
+
+        function handleMediaFormatChange() {
+            if (currentMediaTypeMode === 'url') {
+                handleMediaInputChange();
+            }
+        }
+
+        function showMediaPreview(src, type) {
+            const container = document.getElementById('mediaPreviewContainer');
+            const img = document.getElementById('mediaPreviewImg');
+            const vid = document.getElementById('mediaPreviewVid');
+
+            container.classList.remove('hidden');
+            if (type === 'video') {
+                img.classList.add('hidden');
+                vid.classList.remove('hidden');
+                vid.src = src;
+            } else {
+                vid.classList.add('hidden');
+                img.classList.remove('hidden');
+                img.src = src;
+            }
+        }
+
+        function clearMediaPreview() {
+            uploadedBase64Media = '';
+            document.getElementById('postImageUrl').value = '';
+            document.getElementById('newsFileInput').value = '';
+            document.getElementById('fileNameDisplay').innerText = 'No file selected (Supports JPG, PNG, WEBP, MP4)';
+            document.getElementById('mediaPreviewContainer').classList.add('hidden');
+            document.getElementById('mediaPreviewImg').src = '';
+            document.getElementById('mediaPreviewVid').src = '';
+        }
+
+        /* Mouse Tracking Glow Orb */
+        const cursorOrb = document.getElementById('cursorOrb');
+        document.addEventListener('mousemove', (e) => {
+            if (cursorOrb) {
+                cursorOrb.style.left = `${e.clientX}px`;
+                cursorOrb.style.top = `${e.clientY}px`;
+            }
+        });
+
+        /* Dynamic 3D Card Tilt Effect */
+        function init3DTilt() {
+            const cards = document.querySelectorAll('.tilt-card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -10;
+                    const rotateY = ((x - centerX) / centerX) * 10;
+                    
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                    card.style.setProperty('--mouse-x', `${(x / rect.width) * 100}%`);
+                    card.style.setProperty('--mouse-y', `${(y / rect.height) * 100}%`);
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                });
+            });
+        }
+
+        /* Theme Switcher Toggle */
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+
+            // 'dark' stays on so all light-text styles keep working;
+            // 'light' just lifts the palette to the brighter slate variant.
+            const goingLight = !html.classList.contains('light');
+            html.classList.add('dark');
+            html.classList.toggle('light', goingLight);
+            icon.setAttribute('data-lucide', goingLight ? 'moon' : 'sun');
+            lucide.createIcons();
+        }
+
+        /* Mobile Menu Toggle */
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        /* Video Showcase Modal */
+        function openVideoModal(url, title = 'Showcase Video') {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoModalIframe');
+            document.getElementById('videoModalTitle').innerHTML = `<i data-lucide="film" class="w-4 h-4 text-orange-500"></i> ${title}`;
+            iframe.src = url;
+            modal.classList.add('active');
+            lucide.createIcons();
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoModalIframe');
+            iframe.src = '';
+            modal.classList.remove('active');
+        }
+
+        /* 1-Minute Intro Video Player Controls */
+        const introVideo = document.getElementById('introVideo');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const videoProgress = document.getElementById('videoProgress');
+        const videoTime = document.getElementById('videoTime');
+
+        function togglePlayIntro() {
+            if (introVideo.paused) {
+                introVideo.play();
+                playPauseBtn.innerHTML = `<i data-lucide="pause" class="w-5 h-5 fill-white"></i>`;
+            } else {
+                introVideo.pause();
+                playPauseBtn.innerHTML = `<i data-lucide="play" class="w-5 h-5 fill-white"></i>`;
+            }
+            lucide.createIcons();
+        }
+
+        function toggleMuteIntro() {
+            introVideo.muted = !introVideo.muted;
+            const muteBtn = document.getElementById('muteBtn');
+            muteBtn.innerHTML = introVideo.muted 
+                ? `<i data-lucide="volume-x" class="w-5 h-5"></i>` 
+                : `<i data-lucide="volume-2" class="w-5 h-5"></i>`;
+            lucide.createIcons();
+        }
+
+        if(introVideo) {
+            introVideo.addEventListener('timeupdate', () => {
+                const pct = (introVideo.currentTime / introVideo.duration) * 100;
+                videoProgress.style.width = `${pct}%`;
+                
+                const curMins = Math.floor(introVideo.currentTime / 60);
+                const curSecs = Math.floor(introVideo.currentTime % 60).toString().padStart(2, '0');
+                const durMins = Math.floor(introVideo.duration / 60) || 0;
+                const durSecs = Math.floor(introVideo.duration % 60 || 0).toString().padStart(2, '0');
+                videoTime.innerText = `${curMins}:${curSecs} / ${durMins}:${durSecs}`;
+            });
+        }
+
+        function seekIntroVideo(e) {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            introVideo.currentTime = pos * introVideo.duration;
+        }
+
+        /* Lightbox Image Popup */
+        function openLightbox(imgSrc, caption) {
+            const lightbox = document.getElementById('lightboxModal');
+            document.getElementById('lightboxImg').src = imgSrc;
+            document.getElementById('lightboxCaption').innerText = caption;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightboxModal').classList.remove('active');
+        }
+
+        /* Generic Detail Modal */
+        function openDetailModal(title, desc, img) {
+            document.getElementById('detailModalTitle').innerText = title;
+            document.getElementById('detailModalDesc').innerText = desc;
+            
+            const imgContainer = document.getElementById('detailModalImageContainer');
+            if (img) {
+                document.getElementById('detailModalImage').src = img;
+                imgContainer.classList.remove('hidden');
+            } else {
+                imgContainer.classList.add('hidden');
+            }
+            
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeDetailModal() {
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        /* LocalStorage Dynamic News Feed Engine */
+        const defaultNews = [
+            {
+                id: 1,
+                title: "WAZCLAN Acquires New RED V-Raptor 8K Cinema Rigs",
+                category: "Announcement",
+                mediaType: "image",
+                date: "October 4, 2026",
+                author: "Studio Admin",
+                image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=800&q=80",
+                content: "We are thrilled to announce our latest gear upgrade to deliver ultra-high-definition 8K 120fps video for all upcoming music videos, commercials, and festival documentaries."
+            },
+            {
+                id: 2,
+                title: "Behind The Scenes: TechCorp Global Keynote in Tokyo",
+                category: "Commercial Release",
+                mediaType: "image",
+                date: "September 28, 2026",
+                author: "Elena Vance",
+                image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80",
+                content: "Watch our exclusive production commercial created for TechCorp's flagship release in Tokyo, featuring spatial sound, crane cinematography, and custom stage design."
+            },
+            {
+                id: 3,
+                title: "WAZCLAN Wins 'Best Visual Cinematography' At World Cinema Fest",
+                category: "Award News",
+                mediaType: "image",
+                date: "September 15, 2026",
+                author: "Marcus Thorne",
+                image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+                content: "Our short film 'Ethereal Reverie' was honored with the Grand Jury Prize for Cinematography. Special thanks to our entire camera and post-production audio team!"
+            }
+        ];
+
+        function loadNewsFeed() {
+            const container = document.getElementById('newsFeedContainer');
+            let storedNews = localStorage.getItem('wazclan_news_feed');
+            
+            let newsArray = storedNews ? JSON.parse(storedNews) : defaultNews;
+            if (!storedNews) {
+                localStorage.setItem('wazclan_news_feed', JSON.stringify(defaultNews));
+            }
+
+            container.innerHTML = '';
+            newsArray.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "tilt-card glass-card rounded-ios-lg overflow-hidden flex flex-col justify-between";
+                
+                const mediaElement = item.mediaType === 'video'
+                    ? `<video src="${item.image}" controls class="w-full h-full object-cover"></video>`
+                    : `<img src="${item.image}" alt="News Image" class="w-full h-full object-cover">`;
+
+                const deleteBtn = isAdmin()
+                    ? `<button onclick="deletePost(${item.id})" title="Delete post" class="absolute top-3 right-3 z-20 bg-red-600 hover:bg-red-500 text-white p-2 rounded-full shadow-lg border border-white/20 bubbly-button"><i data-lucide="trash-2" class="w-4 h-4"></i></button>`
+                    : '';
+
+                card.innerHTML = `
+                    <div>
+                        <div class="aspect-video overflow-hidden relative bg-black">
+                            ${mediaElement}
+                            ${deleteBtn}
+                            <span class="absolute top-3 left-3 bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider border border-white/20">${item.category}</span>
+                        </div>
+                        <div class="p-6">
+                            <div class="text-[11px] text-slate-400 mb-2 font-mono">${item.date} • By ${item.author}</div>
+                            <h3 class="font-bold text-xl mb-3">${item.title}</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-300 leading-relaxed font-light">${item.content}</p>
+                        </div>
+                    </div>
+                    <div class="px-6 pb-6 pt-2">
+                        <button onclick="openDetailModal('${item.title.replace(/'/g, "\\'")}', '${item.content.replace(/'/g, "\\'")}', '${item.mediaType === 'image' ? item.image : ''}')" class="text-xs font-bold text-blue-500 hover:text-blue-400 flex items-center gap-1.5 bubbly-button">
+                            <span>Read Full Story</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            lucide.createIcons();
+            init3DTilt();
+        }
+
+        /* Admin Auth (client-side gate) */
+        // SHA-256 hash of the admin password. To change it, see the note in chat.
+        const ADMIN_PASS_HASH = '65a6e4d2650d7fb5dc8d914156bbebb962d36602bba68dcf274f72050eab6f1a';
+
+        function isAdmin() {
+            return sessionStorage.getItem('wazclan_admin') === '1';
+        }
+
+        async function sha256Hex(text) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function refreshAdminView() {
+            const loggedIn = isAdmin();
+            document.getElementById('adminLoginView').classList.toggle('hidden', loggedIn);
+            document.getElementById('adminForm').classList.toggle('hidden', !loggedIn);
+        }
+
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            const input = document.getElementById('adminPassword');
+            const errorEl = document.getElementById('adminLoginError');
+            const hash = await sha256Hex(input.value);
+            if (hash === ADMIN_PASS_HASH) {
+                sessionStorage.setItem('wazclan_admin', '1');
+                input.value = '';
+                errorEl.classList.add('hidden');
+                refreshAdminView();
+                loadNewsFeed();
+            } else {
+                errorEl.classList.remove('hidden');
+                input.value = '';
+            }
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem('wazclan_admin');
+            closeAdminModal();
+            loadNewsFeed();
+        }
+
+        function deletePost(id) {
+            if (!isAdmin()) return;
+            if (!confirm('Delete this post? This cannot be undone.')) return;
+            const stored = JSON.parse(localStorage.getItem('wazclan_news_feed')) || defaultNews;
+            const updated = stored.filter(post => post.id !== id);
+            localStorage.setItem('wazclan_news_feed', JSON.stringify(updated));
+            loadNewsFeed();
+        }
+
+        function openAdminModal() {
+            refreshAdminView();
+            document.getElementById('adminModal').classList.add('active');
+        }
+
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.remove('active');
+            document.getElementById('adminLoginError').classList.add('hidden');
+            document.getElementById('adminPassword').value = '';
+            clearMediaPreview();
+        }
+
+        function handlePostNews(e) {
+            e.preventDefault();
+            if (!isAdmin()) return;
+            const title = document.getElementById('postTitle').value;
+            const category = document.getElementById('postCategory').value;
+            const mediaType = document.getElementById('newsMediaType').value;
+            
+            let finalMedia = '';
+            if (currentMediaTypeMode === 'url') {
+                finalMedia = document.getElementById('postImageUrl').value.trim();
+            } else {
+                finalMedia = uploadedBase64Media;
+            }
+
+            if (!finalMedia) {
+                alert("Please provide a media URL or upload a file.");
+                return;
+            }
+
+            const content = document.getElementById('postContent').value;
+
+            let storedNews = JSON.parse(localStorage.getItem('wazclan_news_feed')) || defaultNews;
+            const newPost = {
+                id: Date.now(),
+                title: title,
+                category: category,
+                mediaType: mediaType,
+                date: "Just Now",
+                author: "Admin Portal",
+                image: finalMedia,
+                content: content
+            };
+
+            storedNews.unshift(newPost);
+            localStorage.setItem('wazclan_news_feed', JSON.stringify(storedNews));
+
+            loadNewsFeed();
+            closeAdminModal();
+            e.target.reset();
+            clearMediaPreview();
+        }
+
+        function resetNewsFeed() {
+            if (!isAdmin()) return;
+            localStorage.setItem('wazclan_news_feed', JSON.stringify(defaultNews));
+            loadNewsFeed();
+            closeAdminModal();
+        }
+
+        /* Contact Form Handler */
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            openDetailModal('Inquiry Submitted!', 'Thank you for reaching out to WAZCLAN. Our lead producer will review your project brief and contact you within 24 hours.');
+            e.target.reset();
+        }
+
+        /* Initialization */
+        window.addEventListener('DOMContentLoaded', () => {
+            loadNewsFeed();
+            init3DTilt();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
